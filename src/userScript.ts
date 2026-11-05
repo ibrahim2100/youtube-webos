@@ -18,6 +18,8 @@ import './hooks/json-stringify';
 import './shorts.js';
 import './sponsorblock.js';
 import './ui.js';
+import './king-stats.js';
+import './dearrow.js';
 import './font-fix.css';
 import './thumbnail-quality';
 import './screensaver-fix';

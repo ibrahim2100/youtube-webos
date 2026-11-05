@@ -1,80 +1,206 @@
 const CONFIG_KEY = 'ytaf-configuration';
 
+/**
+ * `desc` is the English label (kept for compatibility), `ar` the Arabic one.
+ * `group` decides the section of the settings screen.
+ */
 const configOptions = new Map([
-  ['enableAdBlock', { default: true, desc: 'Enable ad blocking' }],
-  ['upgradeThumbnails', { default: false, desc: 'Upgrade thumbnail quality' }],
   [
-    'removeShorts',
-    { default: false, desc: 'Remove Shorts from subscriptions' }
-  ],
-  ['enableSponsorBlock', { default: true, desc: 'Enable SponsorBlock' }],
-  [
-    'enableSponsorBlockSponsor',
-    { default: true, desc: 'Skip sponsor segments' }
-  ],
-  ['enableSponsorBlockIntro', { default: true, desc: 'Skip intro segments' }],
-  ['enableSponsorBlockOutro', { default: true, desc: 'Skip outro segments' }],
-  [
-    'enableSponsorBlockInteraction',
+    'enableAdBlock',
     {
       default: true,
-      desc: 'Skip interaction reminder segments'
+      desc: 'Enable ad blocking',
+      ar: 'حظر الإعلانات',
+      group: 'general'
     }
   ],
   [
-    'enableSponsorBlockSelfPromo',
-    {
-      default: true,
-      desc: 'Skip self promotion segments'
-    }
-  ],
-  [
-    'enableSponsorBlockMusicOfftopic',
-    {
-      default: true,
-      desc: 'Skip non-music segments in music videos'
-    }
-  ],
-  [
-    'enableSponsorBlockPreview',
+    'upgradeThumbnails',
     {
       default: false,
-      desc: 'Skip recaps and previews'
+      desc: 'Upgrade thumbnail quality',
+      ar: 'صور مصغّرة بجودة أعلى',
+      group: 'general'
     }
   ],
   [
     'hideLogo',
     {
       default: false,
-      desc: 'Hide YouTube logo'
+      desc: 'Hide YouTube logo',
+      ar: 'إخفاء شعار يوتيوب',
+      group: 'general'
     }
   ],
   [
     'showWatch',
     {
       default: false,
-      desc: 'Display time in UI'
-    }
-  ],
-  [
-    'forceHighResVideo',
-    {
-      default: false,
-      desc: 'Force max resolution video playback'
-    }
-  ],
-  [
-    'removeEndscreen',
-    {
-      default: false,
-      desc: 'Remove end screens from video'
+      desc: 'Display time in UI',
+      ar: 'عرض الساعة على الشاشة',
+      group: 'general'
     }
   ],
   [
     'autoAccountSelect',
     {
       default: false,
-      desc: 'Bypass initial account selection on startup'
+      desc: 'Bypass initial account selection on startup',
+      ar: 'تخطّي اختيار الحساب عند التشغيل',
+      group: 'general'
+    }
+  ],
+  [
+    'forceHighResVideo',
+    {
+      default: false,
+      desc: 'Force max resolution video playback',
+      ar: 'أعلى دقة متاحة دائماً',
+      group: 'video'
+    }
+  ],
+  [
+    'removeEndscreen',
+    {
+      default: false,
+      desc: 'Remove end screens from video',
+      ar: 'إزالة شاشات نهاية الفيديو',
+      group: 'video'
+    }
+  ],
+  [
+    'removeShorts',
+    {
+      default: false,
+      desc: 'Remove Shorts everywhere (home, search, subscriptions)',
+      ar: 'إزالة Shorts من كل الصفحات',
+      group: 'video'
+    }
+  ],
+  [
+    'enableSponsorBlock',
+    {
+      default: true,
+      desc: 'Enable SponsorBlock',
+      ar: 'تفعيل SponsorBlock',
+      group: 'sponsor'
+    }
+  ],
+  [
+    'enableSponsorBlockSponsor',
+    {
+      default: true,
+      desc: 'Skip sponsor segments',
+      ar: 'تخطّي الرعاة',
+      group: 'sponsor'
+    }
+  ],
+  [
+    'enableSponsorBlockIntro',
+    {
+      default: true,
+      desc: 'Skip intro segments',
+      ar: 'تخطّي المقدمة',
+      group: 'sponsor'
+    }
+  ],
+  [
+    'enableSponsorBlockOutro',
+    {
+      default: true,
+      desc: 'Skip outro segments',
+      ar: 'تخطّي الخاتمة',
+      group: 'sponsor'
+    }
+  ],
+  [
+    'enableSponsorBlockInteraction',
+    {
+      default: true,
+      desc: 'Skip interaction reminder segments',
+      ar: 'تخطّي «اشترك وفعّل الجرس»',
+      group: 'sponsor'
+    }
+  ],
+  [
+    'enableSponsorBlockSelfPromo',
+    {
+      default: true,
+      desc: 'Skip self promotion segments',
+      ar: 'تخطّي الترويج الذاتي',
+      group: 'sponsor'
+    }
+  ],
+  [
+    'enableSponsorBlockMusicOfftopic',
+    {
+      default: true,
+      desc: 'Skip non-music segments in music videos',
+      ar: 'تخطّي الأجزاء غير الموسيقية',
+      group: 'sponsor'
+    }
+  ],
+  [
+    'enableSponsorBlockPreview',
+    {
+      default: false,
+      desc: 'Skip recaps and previews',
+      ar: 'تخطّي الملخّصات والمعاينات',
+      group: 'sponsor'
+    }
+  ],
+  [
+    'enableStats',
+    {
+      default: true,
+      desc: 'Video stats on the RED button',
+      ar: 'إحصائيات الفيديو بالزر الأحمر',
+      group: 'video'
+    }
+  ],
+  [
+    'enableSponsorBlockManual',
+    {
+      default: false,
+      desc: 'Ask before skipping (press YELLOW to skip)',
+      ar: 'اسألني قبل التخطّي (الأصفر للتخطّي)',
+      group: 'sponsor'
+    }
+  ],
+  [
+    'enableDeArrow',
+    {
+      default: true,
+      desc: 'Enable DeArrow',
+      ar: 'تفعيل DeArrow',
+      group: 'dearrow'
+    }
+  ],
+  [
+    'deArrowTitles',
+    {
+      default: true,
+      desc: 'Honest titles (no clickbait)',
+      ar: 'عناوين صادقة بدون تضليل',
+      group: 'dearrow'
+    }
+  ],
+  [
+    'deArrowThumbnails',
+    {
+      default: true,
+      desc: 'Honest thumbnails',
+      ar: 'صور مصغّرة صادقة',
+      group: 'dearrow'
+    }
+  ],
+  [
+    'uiArabic',
+    {
+      default: true,
+      desc: 'Arabic interface',
+      ar: 'الواجهة بالعربية',
+      group: 'interface'
     }
   ]
 ]);
@@ -117,6 +243,15 @@ let localConfig = loadStoredConfig() ?? Object.create(defaultConfig);
 
 function configExists(key) {
   return configOptions.has(key);
+}
+
+export function configGetLabel(key, arabic) {
+  if (!configExists(key)) {
+    throw new Error('tried to get label for unknown config key: ' + key);
+  }
+
+  const o = configOptions.get(key);
+  return arabic && o.ar ? o.ar : o.desc;
 }
 
 export function configGetDesc(key) {

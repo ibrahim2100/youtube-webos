@@ -1,67 +1,453 @@
+/* ===== Albrhi The KING — settings screen ===== */
+:root {
+  --king-gold: #f5b942;
+  --king-gold-soft: rgba(245, 185, 66, 0.16);
+  --king-bg: rgba(10, 10, 14, 0.94);
+  --king-card: rgba(255, 255, 255, 0.055);
+  --king-line: rgba(255, 255, 255, 0.09);
+  --king-text: #f3f3f6;
+  /* 1 unit = 16px on a 1080p screen, whatever root font size YouTube sets */
+  --u: 1.4815vh;
+  --king-dim: #9a9aa6;
+}
+
 .ytaf-ui-container {
-  position: absolute;
-  top: 10%;
-  left: 10%;
-  right: 10%;
-  bottom: 10%;
-
-  background: rgba(18, 18, 18, 0.9);
-  backdrop-filter: blur(23px);
-  color: white;
-  border: 0.1rem solid rgb(52 52 52);
-  border-radius: 20px;
-  padding: 1em;
-  font-size: 1.4rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(
+    ellipse at 50% 0%,
+    rgba(245, 185, 66, 0.1),
+    rgba(0, 0, 0, 0.86) 70%
+  );
+  color: var(--king-text);
+  font-size: calc(1.3 * var(--u));
+  outline: none;
 }
 
-.ytaf-ui-container :focus {
-  outline: 4px red solid;
-  background-color: rgba(240, 248, 255, 0.511);
+.ytaf-ui-card {
+  position: relative;
+  box-sizing: border-box;
+  width: 84%;
+  height: 86%;
+  display: flex;
+  flex-direction: column;
+  padding: calc(1.6 * var(--u)) calc(2.2 * var(--u)) calc(1.2 * var(--u));
+  background: var(--king-bg);
+  border: 1px solid var(--king-line);
+  border-top: 3px solid var(--king-gold);
+  border-radius: calc(1.6 * var(--u));
+  box-shadow: 0 calc(1.5 * var(--u)) calc(5 * var(--u)) rgba(0, 0, 0, 0.7);
+  overflow: hidden;
 }
 
-.ytaf-ui-container h1 {
-  margin: 0;
-  margin-bottom: 0.5em;
-  text-align: center;
+.ytaf-ui-header {
+  display: flex;
+  align-items: center;
+  gap: calc(1.2 * var(--u));
+  padding-bottom: calc(1 * var(--u));
+  margin-bottom: calc(0.8 * var(--u));
+  border-bottom: 1px solid var(--king-line);
 }
 
-.ytaf-ui-container input[type='checkbox'] {
-  width: 1.5rem;
-  height: 1.3rem;
+.ytaf-ui-crown {
+  width: calc(3.4 * var(--u));
+  height: calc(2.6 * var(--u));
+  color: var(--king-gold);
+  flex: none;
+  filter: drop-shadow(0 0 calc(0.6 * var(--u)) rgba(245, 185, 66, 0.45));
 }
 
-.ytaf-ui-container label {
+.ytaf-ui-crown svg {
+  width: 100%;
+  height: 100%;
   display: block;
-  font-size: 1.3rem;
 }
 
-.ytaf-notification-container {
+.ytaf-ui-titles h1 {
+  margin: 0;
+  font-size: calc(2.2 * var(--u));
+  line-height: 1.1;
+  font-weight: 800;
+  letter-spacing: calc(0.08 * var(--u));
+  background: linear-gradient(90deg, #ffe29a, var(--king-gold) 55%, #e58a1f);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.ytaf-ui-titles p {
+  margin: calc(0.25 * var(--u)) 0 0;
+  font-size: calc(1.05 * var(--u));
+  color: var(--king-dim);
+}
+
+.ytaf-ui-body {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: minmax(0, 1fr);
+  gap: calc(1.6 * var(--u));
+  overflow: hidden;
+}
+
+.ytaf-ui-col {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  padding: calc(0.35 * var(--u)) calc(0.5 * var(--u)) calc(0.5 * var(--u));
+  scrollbar-width: none;
+}
+
+.ytaf-ui-col::-webkit-scrollbar {
+  display: none;
+}
+
+.ytaf-col-inner {
+  position: relative;
+  padding-bottom: calc(2 * var(--u));
+  transition: transform 0.18s ease-out;
+}
+
+.ytaf-section {
+  margin-bottom: calc(1.2 * var(--u));
+  transition: opacity 0.2s;
+}
+
+.ytaf-section-title {
+  display: flex;
+  align-items: center;
+  gap: calc(0.6 * var(--u));
+  margin: 0 0 calc(0.55 * var(--u));
+  font-size: calc(1.05 * var(--u));
+  font-weight: 700;
+  letter-spacing: calc(0.04 * var(--u));
+  color: var(--king-gold);
+}
+
+.ytaf-section-icon {
+  font-size: calc(0.95 * var(--u));
+  opacity: 0.9;
+}
+
+.ytaf-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(1 * var(--u));
+  box-sizing: border-box;
+  margin: 0 0 calc(0.45 * var(--u));
+  padding: calc(0.7 * var(--u)) calc(1.1 * var(--u));
+  min-height: calc(3.2 * var(--u));
+  font-size: calc(1.25 * var(--u));
+  line-height: 1.25;
+  background: var(--king-card);
+  border: 2px solid transparent;
+  border-radius: calc(1 * var(--u));
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    transform 0.15s;
+}
+
+.ytaf-row-sub {
+  margin-inline-start: calc(1.6 * var(--u));
+  font-size: calc(1.15 * var(--u));
+}
+
+.ytaf-row:focus-within {
+  background: var(--king-gold-soft);
+  border-color: var(--king-gold);
+  transform: scale(1.02);
+  box-shadow: 0 0 calc(1.4 * var(--u)) rgba(245, 185, 66, 0.28);
+}
+
+.ytaf-row-text {
+  flex: 1;
+}
+
+.ytaf-section-off .ytaf-row-sub {
+  opacity: 0.38;
+}
+
+/* iOS-style switch built from the checkbox itself (stays focusable) */
+.ytaf-ui-container input.ytaf-switch {
+  -webkit-appearance: none;
+  appearance: none;
+  position: relative;
+  flex: none;
+  width: calc(3.6 * var(--u));
+  height: calc(2 * var(--u));
+  margin: 0;
+  background: #3b3b46;
+  border-radius: calc(1 * var(--u));
+  outline: none;
+  transition: background 0.2s;
+}
+
+.ytaf-ui-container input.ytaf-switch::before {
+  content: '';
   position: absolute;
-  right: 10px;
-  bottom: 10px;
-  font-size: 16pt;
+  top: calc(0.2 * var(--u));
+  left: calc(0.2 * var(--u));
+  width: calc(1.6 * var(--u));
+  height: calc(1.6 * var(--u));
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+.ytaf-ui-container input.ytaf-switch:checked {
+  background: var(--king-gold);
+}
+
+.ytaf-ui-container input.ytaf-switch:checked::before {
+  transform: translateX(calc(1.6 * var(--u)));
+}
+
+.ytaf-ui-container[dir='rtl'] input.ytaf-switch::before {
+  left: auto;
+  right: calc(0.2 * var(--u));
+}
+
+.ytaf-ui-container[dir='rtl'] input.ytaf-switch:checked::before {
+  transform: translateX(calc(-1.6 * var(--u)));
+}
+
+.ytaf-ui-hints {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: calc(0.6 * var(--u)) calc(2 * var(--u));
+  padding-top: calc(0.9 * var(--u));
+  margin-top: calc(0.4 * var(--u));
+  border-top: 1px solid var(--king-line);
+  font-size: calc(1 * var(--u));
+  color: var(--king-dim);
+}
+
+.ytaf-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(0.55 * var(--u));
+}
+
+.ytaf-hint-dot {
+  display: inline-block;
+  min-width: calc(1.1 * var(--u));
+  height: calc(1.1 * var(--u));
+  padding: 0 calc(0.3 * var(--u));
+  box-sizing: border-box;
+  border-radius: calc(0.6 * var(--u));
+  font-style: normal;
+  font-size: calc(0.7 * var(--u));
+  line-height: calc(1.1 * var(--u));
+  text-align: center;
+  color: #111;
+  background: #cfcfd8;
+}
+
+.ytaf-hint-green {
+  background: #2fbf4f;
+  width: calc(1.1 * var(--u));
+  padding: 0;
+}
+
+.ytaf-hint-blue {
+  background: #2f8cff;
+  width: calc(1.1 * var(--u));
+  padding: 0;
+}
+
+.ytaf-hint-arrows,
+.ytaf-hint-ok,
+.ytaf-hint-back {
+  letter-spacing: calc(0.05 * var(--u));
+}
+
+.ytaf-ui-version {
+  margin-top: calc(0.5 * var(--u));
+  text-align: center;
+  font-size: calc(0.75 * var(--u));
+  color: #5d5d68;
+}
+
+/* ===== toasts ===== */
+.ytaf-notification-container {
+  position: fixed;
+  right: calc(1.5 * var(--u));
+  bottom: calc(1.5 * var(--u));
+  font-size: calc(1.25 * var(--u));
   z-index: 1200;
 }
 
 .ytaf-notification-container .message {
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 1em;
-  margin: 0.5em;
+  background: rgba(12, 12, 16, 0.92);
+  color: #fff;
+  padding: calc(0.9 * var(--u)) calc(1.4 * var(--u));
+  margin: calc(0.5 * var(--u));
   transition: all 0.3s ease-in-out;
   opacity: 1;
-  line-height: 1;
-  border-right: 10px solid rgba(50, 255, 50, 0.3);
+  line-height: 1.2;
+  border-right: calc(0.5 * var(--u)) solid rgba(245, 185, 66, 0.95);
+  border-radius: calc(1 * var(--u));
+  box-shadow: 0 calc(0.6 * var(--u)) calc(2 * var(--u)) rgba(0, 0, 0, 0.55);
   display: inline-block;
   float: right;
 }
 
 .ytaf-notification-container .message-hidden {
   opacity: 0;
-  margin: 0 0.5em;
-  padding: 0 1em;
+  margin: 0 calc(0.5 * var(--u));
+  padding: 0 calc(1.4 * var(--u));
   line-height: 0;
+}
+
+/* ===== SponsorBlock stats line ===== */
+.ytaf-stat {
+  margin: calc(0.4 * var(--u)) calc(0.3 * var(--u)) 0;
+  font-size: calc(0.95 * var(--u));
+  line-height: 1.4;
+  color: var(--king-dim);
+}
+
+/* ===== video stats overlay (RED) ===== */
+.king-stats {
+  position: fixed;
+  top: calc(2 * var(--u));
+  left: calc(2 * var(--u));
+  z-index: 950;
+  min-width: calc(21 * var(--u));
+  padding: calc(1 * var(--u)) calc(1.5 * var(--u));
+  font-size: calc(1.35 * var(--u));
+  line-height: 1.55;
+  color: #f3f3f6;
+  background: rgba(10, 10, 14, 0.82);
+  border: 1px solid rgba(245, 185, 66, 0.4);
+  border-radius: calc(0.9 * var(--u));
+  pointer-events: none;
+}
+
+.king-stats-title {
+  margin-bottom: calc(0.2 * var(--u));
+  font-weight: 700;
+  color: #f5b942;
+}
+
+/* ===== "press YELLOW to skip" banner ===== */
+.king-skip-prompt {
+  position: fixed;
+  left: 50%;
+  bottom: calc(9 * var(--u));
+  transform: translateX(-50%);
+  z-index: 950;
+  padding: calc(0.8 * var(--u)) calc(1.8 * var(--u));
+  font-size: calc(1.3 * var(--u));
+  color: #111;
+  background: #f5b942;
+  border-radius: calc(2 * var(--u));
+  box-shadow: 0 calc(0.4 * var(--u)) calc(1.6 * var(--u)) rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+}
+
+/* ===== audio-only screen ===== */
+.king-audio {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.5s;
+}
+
+.king-audio.king-audio-peek {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.king-audio-card {
+  width: 56vw;
+  text-align: center;
+  transition: transform 6s ease-in-out;
+}
+
+.king-audio-thumb {
+  display: block;
+  width: calc(26 * var(--u));
+  height: calc(14.6 * var(--u));
+  margin: 0 auto calc(2 * var(--u));
+  object-fit: cover;
+  border-radius: calc(1 * var(--u));
+  opacity: 0.55;
+}
+
+.king-audio-note {
+  margin-bottom: calc(2 * var(--u));
+  font-size: calc(1.1 * var(--u));
+  letter-spacing: 0.1em;
+  color: #6f5a2a;
+}
+
+.king-audio-title {
+  font-size: calc(2.4 * var(--u));
+  line-height: 1.3;
+  font-weight: 700;
+  color: #b9b9c4;
+}
+
+.king-audio-author {
+  margin-top: calc(0.6 * var(--u));
+  font-size: calc(1.4 * var(--u));
+  color: #6d6d78;
+}
+
+.king-audio-bar,
+.king-audio-time,
+.king-audio-clock {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+.king-audio-bar {
+  height: calc(0.3 * var(--u));
+  margin: calc(2.4 * var(--u)) auto calc(0.8 * var(--u));
+  background: #1d1d22;
+  border-radius: calc(0.2 * var(--u));
+  overflow: hidden;
+}
+
+.king-audio-fill {
+  height: 100%;
+  width: 0;
+  background: #8a6a1e;
+}
+
+.king-audio-time {
+  font-size: calc(1.1 * var(--u));
+  color: #5a5a64;
+}
+
+.king-audio-clock {
+  position: absolute;
+  right: calc(3 * var(--u));
+  bottom: calc(2 * var(--u));
+  font-size: calc(1.3 * var(--u));
+  color: #4a4a54;
 }
 
 .ytaf-sponsorblock-segment-container {
@@ -102,23 +488,15 @@
   overflow: unset !important;
 }
 
-.ytaf-ui-sponsor {
-  font-size: 0.7rem;
-}
-
-.ytaf-ui-version {
-  font-size: 0.7rem;
-  color: #656565;
-  position: absolute;
-  right: 2rem;
-  bottom: 1rem;
-}
-
 .ytaf-ui-watchControl-overlayMessage {
   position: fixed;
   top: 35%;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 1rem;
-  color: rgba(255, 255, 255, 0.8);
+  padding: calc(0.7 * var(--u)) calc(1.6 * var(--u));
+  font-size: calc(1.15 * var(--u));
+  color: #f5b942;
+  background: rgba(12, 12, 16, 0.85);
+  border: 1px solid rgba(245, 185, 66, 0.5);
+  border-radius: calc(2 * var(--u));
 }

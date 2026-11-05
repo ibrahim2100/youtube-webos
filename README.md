@@ -1,3 +1,50 @@
+<div align="center">
+
+# 👑 Albrhi The KING
+### نسخة مطوَّرة من تطبيق يوتيوب لتلفزيونات LG webOS · a redesigned fork of youtube-webos
+
+**by [إبراهيم آل رهن · Ibrahim Al-Rahn](https://github.com/ibrahim2100)** · built with an AI agent ([Claude](https://claude.com/claude-code)), tested on a real rooted LG webOS 7.5 TV
+
+![Settings (Arabic)](./preview/design-arabic.jpg)
+![Settings (English)](./preview/design-english.jpg)
+
+</div>
+
+> Fork of [webosbrew/youtube-webos](https://github.com/webosbrew/youtube-webos) (GPL-3.0-only). All credit for the ad blocking, SponsorBlock and the app itself goes to its authors; this fork changes the interface and adds features. Same app id (`youtube.leanback.v4`), so it installs over the official build. Licensed GPL-3.0-only, source stays public.
+>
+> فورك من المشروع الأصلي (GPL-3.0). الفضل في الحجب وSponsorBlock والتطبيق لأصحابه؛ هذا الفورك يعيد تصميم الواجهة ويضيف مزايا. نفس معرّف التطبيق فيُثبَّت فوق الرسمي.
+
+## ما الجديد · What's new
+
+| | العربي | English |
+|---|---|---|
+| 🎨 | واجهة إعدادات جديدة: أقسام، مفاتيح تشغيل، خط ذهبي، تاج، **عربي افتراضي (RTL)** مع زر للإنجليزية | New settings screen: sections, switches, gold theme, **Arabic by default (RTL)** with an English switch |
+| 🖥️ | تتناسب مع ارتفاع الشاشة (لا تعتمد على حجم خط الصفحة) وتتحرك بالأسهم وتمرّر نفسها | Scales with screen height (not the page's root font), arrow-key navigation, self-scrolling |
+| 📊 | **إحصائيات الفيديو** بالزر الأحمر: الدقة وfps والإطارات المفقودة والمخزَّن والشبكة | **Video stats** on the RED button: resolution, fps, dropped frames, buffer, network |
+| 🚫 | **إزالة Shorts من كل الصفحات** (الرئيسية والبحث والاشتراكات) | **Remove Shorts everywhere** (home, search, subscriptions) |
+| 🎵 | **وضع الصوت فقط** (الأزرق): شاشة سوداء بصورة مصغّرة وعنوان واسم القناة وشريط تقدم وساعة تتحرك ببطء، وأي زر يكشف أزرار يوتيوب | **Audio-only screen** (BLUE): black screen with thumbnail, title, channel, progress and a slowly drifting clock; any key reveals the player controls |
+| ⏭ | SponsorBlock: **إحصائية الوقت الموفَّر** و**«اسألني قبل التخطّي»** (الأصفر يتخطى) | SponsorBlock: **time-saved counter** and an **"ask before skipping"** mode (YELLOW skips) |
+| 🏹 | **DeArrow**: عناوين وصور مصغّرة صادقة بدل المضلِّلة (قسم مستقل، يخزّن محلياً 7 أيام) | **DeArrow**: honest titles and thumbnails instead of clickbait (own section, cached locally for 7 days) |
+| 🔤 | إشعارات وتخطّيات SponsorBlock بالعربي | Arabic SponsorBlock toasts and skip prompts |
+
+### أزرار الريموت · Remote buttons
+🟩 الإعدادات / settings · 🟥 إحصائيات الفيديو / video stats · 🟦 الصوت فقط / audio-only · 🟨 تخطّي أثناء «اسألني» / skip while "ask" is on (otherwise YouTube's own voice search)
+
+### ملاحظات تقنية · Technical notes
+- كل ضغطة ريموت تصل مرتين على LG (الزر الحقيقي ونسخة يعيد يوتيوب إرسالها)؛ الكود يتعامل مع ذلك. *Every remote press arrives twice on LG (the real key and a copy YouTube re-dispatches); the code handles it.*
+- يوتيوب يفرض TrustedHTML: لا `innerHTML` في الكود. *YouTube enforces TrustedHTML: no `innerHTML` in this code.*
+- متصفح LG يتجاهل `scrollTop` في هذه العناصر، فالتمرير بـ`transform`. *The TV browser ignores `scrollTop` here, so scrolling is done with `transform`.*
+- `preview/`: صفحة معاينة محلية بنفس سياسة يوتيوب (`pnpm exec webpack --mode=development --config preview/webpack.preview.js`). *`preview/`: a local preview page enforcing the same TrustedHTML policy.*
+
+### البناء والتثبيت · Build & install
+```bash
+pnpm install
+pnpm run build && pnpm run package      # يُنتج youtube.leanback.v4_*.ipk
+```
+ثبّت الـ ipk بالطريقة المعتادة (Device Manager أو `ares-install`)، أو على تلفزيون مروّت عبر `appInstallService/dev/install`. · Install the ipk the usual way (Device Manager / `ares-install`), or on a rooted TV through `appInstallService/dev/install`.
+
+---
+
 <h1 align="center">
   YouTube Ad-Free
 </h1>

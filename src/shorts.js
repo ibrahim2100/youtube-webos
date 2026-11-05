@@ -4,6 +4,9 @@ import { configRead } from './config';
 
 const SHELF_SHORTS = 'TVHTML5_SHELF_RENDERER_TYPE_SHORTS';
 
+// Verification counter (read it from the inspector: window.__kingShorts).
+window.__kingShorts = { removed: 0, shelves: 0 };
+
 const origParse = JSON.parse;
 JSON.parse = function () {
   const r = origParse.apply(this, arguments);
@@ -11,48 +14,62 @@ JSON.parse = function () {
     return r;
   }
 
-  // First page of subscriptions tab
-  const gridRenderer = findFirstObject(r, 'gridRenderer');
-  if (gridRenderer?.items) {
-    removeShorts(gridRenderer);
-  }
-
-  // Pagination
-  const gridContinuation = findFirstObject(r, 'gridContinuation');
-  if (gridContinuation?.items) {
-    removeShorts(gridContinuation);
-  }
-
-  // Shelf on subscriptions tab
-  const sectionListRenderer = findFirstObject(r, 'sectionListRenderer');
-  if (sectionListRenderer?.contents) {
-    removeShelvesWithShorts(sectionListRenderer);
+  // Only browse/search style responses carry tiles and shelves.
+  if (
+    r &&
+    typeof r === 'object' &&
+    (r.contents || r.continuationContents || r.onResponseReceivedActions)
+  ) {
+    try {
+      sanitize(r);
+    } catch (e) {
+      console.warn('[shorts] sanitize failed', e);
+    }
   }
 
   return r;
 };
 
-function removeShorts(container) {
-  container.items = container.items.filter(
-    (elm) => elm?.tileRenderer?.onSelectCommand?.reelWatchEndpoint == null
+export function isShortsTile(item) {
+  const tile = item?.tileRenderer;
+  if (!tile) return false;
+  if (tile.onSelectCommand?.reelWatchEndpoint != null) return true;
+  if (tile.contentType === 'TILE_CONTENT_TYPE_SHORTS') return true;
+  const overlays = tile.header?.tileHeaderRenderer?.thumbnailOverlays;
+  return (
+    Array.isArray(overlays) &&
+    overlays.some(
+      (o) => o?.thumbnailOverlayTimeStatusRenderer?.style === 'SHORTS'
+    )
   );
 }
 
-function removeShelvesWithShorts(container) {
-  container.contents = container.contents.filter(
-    (elm) => elm?.shelfRenderer?.tvhtml5ShelfRendererType != SHELF_SHORTS
-  );
+export function isShortsShelf(item) {
+  return item?.shelfRenderer?.tvhtml5ShelfRendererType === SHELF_SHORTS;
 }
 
-function findFirstObject(haystack, needle) {
-  for (const key in haystack) {
-    if (key === needle) {
-      return haystack[key];
+/**
+ * Walks a response and removes every Shorts tile or Shorts shelf, wherever it
+ * sits (home shelves, grids, search results, continuations).
+ */
+export function sanitize(node) {
+  if (Array.isArray(node)) {
+    for (let i = node.length - 1; i >= 0; i--) {
+      const item = node[i];
+      if (isShortsShelf(item)) {
+        node.splice(i, 1);
+        window.__kingShorts.shelves++;
+      } else if (isShortsTile(item)) {
+        node.splice(i, 1);
+        window.__kingShorts.removed++;
+      } else {
+        sanitize(item);
+      }
     }
-    if (typeof haystack[key] === 'object') {
-      const result = findFirstObject(haystack[key], needle);
-      if (result) return result;
+  } else if (node && typeof node === 'object') {
+    for (const key in node) {
+      const v = node[key];
+      if (v && typeof v === 'object') sanitize(v);
     }
   }
-  return null;
 }

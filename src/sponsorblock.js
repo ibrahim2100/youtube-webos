@@ -1,49 +1,57 @@
 import sha256 from 'tiny-sha256';
 import { configRead } from './config';
 import { showNotification } from './ui';
+import { addSkipped } from './sb-stats';
 
 // Copied from https://github.com/ajayyy/SponsorBlock/blob/9392d16617d2d48abb6125c00e2ff6042cb7bebe/src/config.ts#L179-L233
 const barTypes = {
   sponsor: {
     color: '#00d400',
     opacity: '0.7',
-    name: 'sponsored segment'
+    name: 'sponsored segment',
+    ar: 'مقطع ترويجي'
   },
   intro: {
     color: '#00ffff',
     opacity: '0.7',
-    name: 'intro'
+    name: 'intro',
+    ar: 'المقدمة'
   },
   outro: {
     color: '#0202ed',
     opacity: '0.7',
-    name: 'outro'
+    name: 'outro',
+    ar: 'الخاتمة'
   },
   interaction: {
     color: '#cc00ff',
     opacity: '0.7',
-    name: 'interaction reminder'
+    name: 'interaction reminder',
+    ar: 'تذكير بالتفاعل'
   },
   selfpromo: {
     color: '#ffff00',
     opacity: '0.7',
-    name: 'self-promotion'
+    name: 'self-promotion',
+    ar: 'ترويج ذاتي'
   },
   music_offtopic: {
     color: '#ff9900',
     opacity: '0.7',
-    name: 'non-music part'
+    name: 'non-music part',
+    ar: 'جزء غير موسيقي'
   },
   preview: {
     color: '#008fd6',
     opacity: '0.7',
-    name: 'recap or preview'
+    name: 'recap or preview',
+    ar: 'ملخص أو معاينة'
   }
 };
 
 const sponsorblockAPI = 'https://sponsorblock.inf.re/api';
 
-class SponsorBlockHandler {
+export class SponsorBlockHandler {
   video = null;
   active = true;
 
@@ -292,9 +300,26 @@ class SponsorBlockHandler {
           return;
         }
 
-        const skipName = barTypes[segment.category]?.name || segment.category;
+        const arabicUi = configRead('uiArabic') !== false;
+        const skipName =
+          (arabicUi ? barTypes[segment.category]?.ar : null) ||
+          barTypes[segment.category]?.name ||
+          segment.category;
+
+        if (configRead('enableSponsorBlockManual')) {
+          // Ask first: the YELLOW button skips (see ui.js), otherwise play on.
+          console.debug(this.videoID, 'Offering skip of', segment);
+          this.offerSkip(segment, skipName);
+          return;
+        }
+
         console.debug(this.videoID, 'Skipping', segment);
-        showNotification(`Skipping ${skipName}`, 2000, 'indigo');
+        showNotification(
+          arabicUi ? `تخطّي: ${skipName}` : `Skipping ${skipName}`,
+          2000,
+          'indigo'
+        );
+        addSkipped(end - this.video.currentTime);
         this.video.currentTime = end;
         this.scheduleSkip();
       },
@@ -302,10 +327,59 @@ class SponsorBlockHandler {
     );
   }
 
+  /** Shows a "press YELLOW to skip" banner while inside the segment. */
+  offerSkip(segment, skipName) {
+    this.clearOffer();
+    const [, end] = segment.segment;
+    const arabic = configRead('uiArabic') !== false;
+
+    const banner = document.createElement('div');
+    banner.className = 'king-skip-prompt';
+    banner.setAttribute('dir', arabic ? 'rtl' : 'ltr');
+    banner.textContent = arabic
+      ? `⏭ اضغط الأصفر لتخطّي (${skipName})`
+      : `⏭ Press YELLOW to skip (${skipName})`;
+    document.body.appendChild(banner);
+    window.__kingSkipPrompt = true;
+
+    const doSkip = () => {
+      addSkipped(end - this.video.currentTime);
+      this.video.currentTime = end;
+      this.clearOffer();
+      this.scheduleSkip();
+    };
+    const onYellow = () => doSkip();
+    window.addEventListener('king-yellow', onYellow);
+
+    // Hide the banner when the segment is over (played through or sought away).
+    const watcher = setInterval(() => {
+      if (
+        !this.video ||
+        this.video.currentTime >= end ||
+        this.video.currentTime < segment.segment[0] - 1
+      ) {
+        this.clearOffer();
+        this.scheduleSkip();
+      }
+    }, 500);
+
+    this.offer = { banner, onYellow, watcher };
+  }
+
+  clearOffer() {
+    if (!this.offer) return;
+    window.removeEventListener('king-yellow', this.offer.onYellow);
+    clearInterval(this.offer.watcher);
+    this.offer.banner.remove();
+    this.offer = null;
+    window.__kingSkipPrompt = false;
+  }
+
   destroy() {
     console.debug(this.videoID, 'Destroying');
 
     this.active = false;
+    this.clearOffer();
 
     if (this.nextSkipTimeout) {
       clearTimeout(this.nextSkipTimeout);

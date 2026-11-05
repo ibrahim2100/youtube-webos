@@ -2,10 +2,11 @@
   position: fixed;
   right: 0;
   top: 0;
-  margin: 1rem 2rem;
-  background-color: rgba(0, 0, 0, 0.3);
-  border-radius: 0.5rem;
-  padding: 0.4rem;
-  font-size: 1.2rem;
-  letter-spacing: 0.05rem;
+  margin: calc(1 * var(--u)) calc(2 * var(--u));
+  background-color: rgba(10, 10, 14, 0.6);
+  border: 1px solid rgba(245, 185, 66, 0.35);
+  border-radius: calc(1 * var(--u));
+  padding: calc(0.35 * var(--u)) calc(0.9 * var(--u));
+  font-size: calc(1.2 * var(--u));
+  letter-spacing: calc(0.05 * var(--u));
 }
