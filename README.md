@@ -10,6 +10,8 @@
 
 </div>
 
+> 📥 **[Download the IPK · حمّل الـ IPK](https://github.com/ibrahim2100/youtube-webos/releases/latest)**
+>
 > Fork of [webosbrew/youtube-webos](https://github.com/webosbrew/youtube-webos) (GPL-3.0-only). All credit for the ad blocking, SponsorBlock and the app itself goes to its authors; this fork changes the interface and adds features. Same app id (`youtube.leanback.v4`), so it installs over the official build. Licensed GPL-3.0-only, source stays public.
 >
 > فورك من المشروع الأصلي (GPL-3.0). الفضل في الحجب وSponsorBlock والتطبيق لأصحابه؛ هذا الفورك يعيد تصميم الواجهة ويضيف مزايا. نفس معرّف التطبيق فيُثبَّت فوق الرسمي.
